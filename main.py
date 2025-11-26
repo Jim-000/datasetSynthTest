@@ -1,5 +1,19 @@
 from PIL import Image, ImageDraw, ImageFont
 import requests
+import random
+
+headerLocations = {
+    "pageNumberHeader": {
+        "X": 1125,
+        "Y": 50
+    },
+    "runningHeader": {
+        "X": 250,
+        "Y": 50
+    }
+}
+
+font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/Ubuntu[wdth,wght]", 36)
 
 def stringify(start=0, stop=0,paraNum=0,indent=False,wordList=[]):
     print("len wordList ", len(wordList))
@@ -24,6 +38,13 @@ def stringify(start=0, stop=0,paraNum=0,indent=False,wordList=[]):
     if indent == True:
         text = "    " + text
     return text, stop-stopShift, paraNum #spaghetti code, yippee!
+
+def elementFill(d=ImageDraw):
+    l = headerLocations
+    pageNumber = random.randint(1,1000)
+    global font
+    d.text((l["pageNumberHeader"]["X"],l["pageNumberHeader"]["Y"]), text=pageNumber, anchor='ls', fill='black',font=font)
+
 
 url = 'https://baconipsum.com/api/'
 params = {'type': 'meat-and-filler',
@@ -51,6 +72,7 @@ while pages < 2: #Another arbitrary int. This one gives number of pages to be cr
     currLine = 0
     indent = True
     paraNum, start, stop = 0, 0, 15
+    elementFill(d)
     while lines > 0: #more loopy than froot loops?
         lastParaNum = paraNum #spaghetti?
         text, start, paraNum = stringify(start=start,stop=stop,paraNum=paraNum,indent=indent,wordList=wordList)
